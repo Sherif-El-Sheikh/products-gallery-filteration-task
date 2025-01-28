@@ -23,7 +23,7 @@ import { notFound } from "next/navigation";
   }
 
 // metadata based on product
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }) {
   const product = await getProduct(params.id);
   return {
     title: product ? `${product.title} - Product Details` : "Product Not Found",
@@ -44,7 +44,7 @@ export async function generateStaticParams() {
 }
 
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({ params }) {
   const product = await getProduct(params.id);
   
   if (!product) {
