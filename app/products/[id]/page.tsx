@@ -25,10 +25,19 @@ import { ProductPageProps } from "@/types/PageProps";
 
 // metadata based on product
 export async function generateMetadata({ params }: ProductPageProps) {
-  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
-  if (!productId) {
+  if (typeof params !== "object" || !params || !("id" in params)) {
     return { title: "Product Not Found" };
   }
+
+  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
+  if (!productId || typeof productId !== "string") {
+    return { title: "Product Not Found" };
+  }
+
+  const product = await getProduct(productId);
+  return {
+    title: product ? `${product.title} - Product Details` : "Product Not Found",
+  };
 }
 
 // generates static parameters for the product pages and converting the product IDs to string
@@ -46,14 +55,16 @@ export async function generateStaticParams() {
 
 
 export default async function productPage({params} : ProductPageProps) {
-  const productId = Array.isArray(params.id) ? params.id[0] : params.id; // دعم القيم المختلفة لـ id
+  if (typeof params !== "object" || !params || !("id" in params)) {
+    notFound();
+  }
 
-  if (!productId) {
+  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
+  if (!productId || typeof productId !== "string") {
     notFound();
   }
 
   const product = await getProduct(productId);
-
   if (!product) {
     notFound();
   }
