@@ -3,24 +3,6 @@ import { Toaster } from "@/components/ui/toaster"
 import { notFound } from "next/navigation";
 import { ProductPageProps } from "@/types/PageProps";
 
-import { GetServerSideProps } from 'next';
-
-// هنا نقوم بتحميل البيانات بشكل صحيح ونتأكد من إرجاع كائن غير async
-export const getServerSideProps: GetServerSideProps<ProductPageProps> = async (context) => {
-  const { id } = context.params!;
-
-  // التأكد من أن الـ id ليس فارغًا
-  if (!id || Array.isArray(id)) {
-    return { notFound: true };
-  }
-
-  // إرجاع البيانات بشكل صحيح بدون أن نرجع Promise
-  return {
-    props: {
-      params: { id },  // نحن هنا نرجع الـ props بشكل ثابت
-    },
-  };
-};
 
   // fetch product data from API
   async function getProduct(id: string) {
@@ -43,12 +25,10 @@ export const getServerSideProps: GetServerSideProps<ProductPageProps> = async (c
 
 // metadata based on product
 export async function generateMetadata({ params }: ProductPageProps) {
-  const resolvePramas = Promise.resolve(params);
-  const productId = String((await resolvePramas).id);
-  const product = await getProduct(productId);
-  return {
-    title: product ? `${product.title} - Product Details` : "Product Not Found",
-  };
+  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
+  if (!productId) {
+    return { title: "Product Not Found" };
+  }
 }
 
 // generates static parameters for the product pages and converting the product IDs to string
@@ -64,16 +44,19 @@ export async function generateStaticParams() {
   }
 }
 
-export default async function productPage({params} : ProductPageProps) {
-  const resolvePramas = Promise.resolve(params);
-  const productId = String((await resolvePramas).id);
 
-   // Fetch product using id
-    const product = await getProduct(productId);
-    // check product exist
-    if (!product) {
-        notFound();
-    }
+export default async function productPage({params} : ProductPageProps) {
+  const productId = Array.isArray(params.id) ? params.id[0] : params.id; // دعم القيم المختلفة لـ id
+
+  if (!productId) {
+    notFound();
+  }
+
+  const product = await getProduct(productId);
+
+  if (!product) {
+    notFound();
+  }
   return (
     <>
     <ProductDetails product={product}/>

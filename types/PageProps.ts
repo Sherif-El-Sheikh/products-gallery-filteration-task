@@ -1,9 +1,7 @@
-import { ParsedUrlQuery } from 'querystring';
-
-export interface ProductPageParams extends ParsedUrlQuery {
-  id: string;
+export interface ProductPageParams {
+    id: string | string[] | undefined;
 }
 
 export interface ProductPageProps {
-  params: ProductPageParams;
+    params: ProductPageParams;
 }
