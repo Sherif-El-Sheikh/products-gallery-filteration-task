@@ -3,6 +3,24 @@ import { Toaster } from "@/components/ui/toaster"
 import { notFound } from "next/navigation";
 import { ProductPageProps } from "@/types/PageProps";
 
+import { GetServerSideProps } from 'next';
+
+// هنا نقوم بتحميل البيانات بشكل صحيح ونتأكد من إرجاع كائن غير async
+export const getServerSideProps: GetServerSideProps<ProductPageProps> = async (context) => {
+  const { id } = context.params!;
+
+  // التأكد من أن الـ id ليس فارغًا
+  if (!id || Array.isArray(id)) {
+    return { notFound: true };
+  }
+
+  // إرجاع البيانات بشكل صحيح بدون أن نرجع Promise
+  return {
+    props: {
+      params: { id },  // نحن هنا نرجع الـ props بشكل ثابت
+    },
+  };
+};
 
   // fetch product data from API
   async function getProduct(id: string) {
