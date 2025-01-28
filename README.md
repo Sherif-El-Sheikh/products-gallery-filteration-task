@@ -92,7 +92,6 @@ Search and Filter: Implemented a search bar to filter products by name.
 - **Search and Filter**: Implemented a search bar to filter products by name.
 - **SEO Management**: Leveraged Next.js' `generateMetadata` for managing meta tags dynamically and improving SEO performance across pages.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
