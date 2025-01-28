@@ -1,7 +1,6 @@
 import ProductDetails from "@/components/ProductDetails";
 import { Toaster } from "@/components/ui/toaster"
 import { notFound } from "next/navigation";
-import { ProductPageProps } from "@/types/PageProps";
 
 
   // fetch product data from API
@@ -24,7 +23,7 @@ import { ProductPageProps } from "@/types/PageProps";
   }
 
 // metadata based on product
-export async function generateMetadata({ params }: ProductPageProps) {
+export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id);
   return {
     title: product ? `${product.title} - Product Details` : "Product Not Found",
@@ -45,15 +44,12 @@ export async function generateStaticParams() {
 }
 
 
-export default async function productPage({params} : ProductPageProps) {
-    const productId = String(params.id);
-
-   // Fetch product using id
-    const product = await getProduct(productId);
-    // check product exist
-    if (!product) {
-        notFound();
-    }
+export default async function ProductPage({ params }: { params: { id: string } }) {
+  const product = await getProduct(params.id);
+  
+  if (!product) {
+    notFound();
+  }
   return (
     <>
     <ProductDetails product={product}/>
