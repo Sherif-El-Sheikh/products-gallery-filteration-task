@@ -25,16 +25,7 @@ import { ProductPageProps } from "@/types/PageProps";
 
 // metadata based on product
 export async function generateMetadata({ params }: ProductPageProps) {
-  if (typeof params !== "object" || !params || !("id" in params)) {
-    return { title: "Product Not Found" };
-  }
-
-  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
-  if (!productId || typeof productId !== "string") {
-    return { title: "Product Not Found" };
-  }
-
-  const product = await getProduct(productId);
+  const product = await getProduct(params.id);
   return {
     title: product ? `${product.title} - Product Details` : "Product Not Found",
   };
@@ -55,19 +46,14 @@ export async function generateStaticParams() {
 
 
 export default async function productPage({params} : ProductPageProps) {
-  if (typeof params !== "object" || !params || !("id" in params)) {
-    notFound();
-  }
+    const productId = String(params.id);
 
-  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
-  if (!productId || typeof productId !== "string") {
-    notFound();
-  }
-
-  const product = await getProduct(productId);
-  if (!product) {
-    notFound();
-  }
+   // Fetch product using id
+    const product = await getProduct(productId);
+    // check product exist
+    if (!product) {
+        notFound();
+    }
   return (
     <>
     <ProductDetails product={product}/>
