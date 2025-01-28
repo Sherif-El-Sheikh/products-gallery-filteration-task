@@ -31,6 +31,19 @@ export async function generateMetadata({ params }: ProductPageProps) {
   };
 }
 
+// generates static parameters for the product pages and converting the product IDs to string
+export async function generateStaticParams() {
+  try {
+    const products = await fetch('https://fakestoreapi.com/products').then(res => res.json());
+    return products.map((product: { id: number }) => ({
+      id: String(product.id)
+    }));
+  } catch (error) {
+    console.log(error)
+    return [];
+  }
+}
+
 export default async function productPage({params} : ProductPageProps) {
     // const resolvedParams = await Promise.resolve(params);
     // Fetch product using id
