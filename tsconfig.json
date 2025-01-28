@@ -13,8 +13,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "noEmitOnError": false,  // أضفنا هذا لإيقاف الإيقاف عند وجود أخطاء
-    "noImplicitAny": false,  // يسمح بالـ any
+    "noEmitOnError": false,
+    "noImplicitAny": false,
     "plugins": [
       {
         "name": "next"
